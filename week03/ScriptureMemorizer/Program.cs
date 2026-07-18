@@ -1,12 +1,48 @@
 using System;
+using System.Collections.Generic;
+
+// Exceeding requirements:
+// This program picks a random scripture from a small built-in library each time
+// it runs, rather than always using the same hard-coded verse, so repeated runs
+// give the user variety to practice with.
 
 class Program
 {
     static void Main(string[] args)
     {
-        Reference reference = new Reference("John", 3, 16);
-        Scripture scripture = new Scripture(reference, "For God so loved the world that he gave his one and only Son");
+        List<Scripture> library = new List<Scripture>
+        {
+            new Scripture(new Reference("John", 3, 16),
+                "For God so loved the world that he gave his one and only Son that whoever believes in him shall not perish but have eternal life"),
+            new Scripture(new Reference("Proverbs", 3, 5, 6),
+                "Trust in the Lord with all your heart and lean not on your own understanding in all your ways submit to him and he will make your paths straight"),
+            new Scripture(new Reference("Philippians", 4, 13),
+                "I can do all this through him who gives me strength")
+        };
 
-        Console.WriteLine("Program stub is running.");
+        Random random = new Random();
+        Scripture scripture = library[random.Next(library.Count)];
+
+        while (true)
+        {
+            Console.Clear();
+            Console.WriteLine(scripture.GetDisplayText());
+            Console.WriteLine();
+
+            if (scripture.IsCompletelyHidden())
+            {
+                break;
+            }
+
+            Console.Write("Press enter to continue or type 'quit' to end: ");
+            string input = Console.ReadLine();
+
+            if (input != null && input.Trim().ToLower() == "quit")
+            {
+                break;
+            }
+
+            scripture.HideRandomWords(3);
+        }
     }
 }
